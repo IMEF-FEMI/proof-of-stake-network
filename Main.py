@@ -1,5 +1,9 @@
+from BlockchainUtils import BlockchainUtils
 from Transaction import Transaction
+from TransactionPool import TransactionPool
 from Wallet import Wallet
+from Blockchain import Blockchain
+import pprint
 
 if __name__ == '__main__':
     sender = 'sender'
@@ -7,12 +11,30 @@ if __name__ == '__main__':
     amount = 1
     type = "TRANSFER"
 
-    transaction = Transaction(sender, receiver, amount, type)
-
     wallet = Wallet()
-    signature = wallet.sign(transaction.toJson())
+    fraudulentWallet = Wallet()
+    pool = TransactionPool()
+    transaction = wallet.createTransaction(receiver, amount, type)
 
-    transaction.sign(signature)
+    if pool.transactionExists(transaction) == False:
+        pool.addTransaction(transaction)
+
+    blockchain = Blockchain()
+
+    lastHash = BlockchainUtils.hash(
+        blockchain.blocks[-1].payload()).hexdigest()
+
+    blockCount = blockchain.blocks[-1].blockCount + 1
+
+    block = wallet.createBlock(pool.transactions, lastHash, blockCount)
+
+    if not blockchain.lastBlockHashValid(block):
+        print("Last block hash is not valid")
     
-    signatureValid = Wallet.signatureValid(transaction.toJson(), signature, wallet.publicKeyString())
-    print(signatureValid)    
+    if not blockchain.blockCountValid(block):
+        print("Block count is not valid")
+
+    if blockchain.lastBlockHashValid(block) and  blockchain.blockCountValid(block):
+        blockchain.addBlock(block)
+    # blockchain.addBlock(block)
+    pprint.pprint(blockchain.toJson())
