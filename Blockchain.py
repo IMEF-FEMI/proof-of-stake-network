@@ -43,11 +43,11 @@ class Blockchain():
             if self.transactionCovered(transaction):
                 coveredTransactions.append(transaction)
             else:
-                print("Transaction not covered")
+                print('transaction is not covered by sender')
         return coveredTransactions
 
     def transactionCovered(self, transaction):
-        if transaction.type == "EXCHANGE":
+        if transaction.type == 'EXCHANGE':
             return True
         senderBalance = self.accountModel.getBalance(
             transaction.senderPublicKey)
@@ -61,19 +61,19 @@ class Blockchain():
             self.executeTransaction(transaction)
 
     def executeTransaction(self, transaction):
-        if transaction.type == "STAKE":
+        if transaction.type == 'STAKE':
             sender = transaction.senderPublicKey
             receiver = transaction.receiverPublicKey
             if sender == receiver:
                 amount = transaction.amount
                 self.pos.update(sender, amount)
                 self.accountModel.updateBalance(sender, -amount)
-            else:
-                sender = transaction.senderPublicKey
-                receiver = transaction.receiverPublicKey
-                amount = transaction.amount
-                self.accountModel.updateBalance(sender, -amount)
-                self.accountModel.updateBalance(receiver, amount)
+        else:
+            sender = transaction.senderPublicKey
+            receiver = transaction.receiverPublicKey
+            amount = transaction.amount
+            self.accountModel.updateBalance(sender, -amount)
+            self.accountModel.updateBalance(receiver, amount)
 
     def nextForger(self):
         lastBlockHash = BlockchainUtils.hash(
@@ -92,11 +92,10 @@ class Blockchain():
 
     def transactionExists(self, transaction):
         for block in self.blocks:
-            for blockTransactions in block.transactions:
-                if transaction.equals(blockTransactions):
+            for blockTransaction in block.transactions:
+                if transaction.equals(blockTransaction):
                     return True
         return False
-    
 
     def forgerValid(self, block):
         forgerPublicKey = self.pos.forger(block.lastHash)
@@ -110,6 +109,4 @@ class Blockchain():
         coveredTransactions = self.getCoveredTransactionSet(transactions)
         if len(coveredTransactions) == len(transactions):
             return True
-        else:
-            return False
-
+        return False

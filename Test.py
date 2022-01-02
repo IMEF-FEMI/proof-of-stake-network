@@ -12,8 +12,8 @@ def getRandomString(length):
 
 if __name__ == '__main__':
     pos = ProofOfStake()
-    pos.update("bob", 100)
-    pos.update("alice", 100)
+    pos.update('bob', 100)
+    pos.update('alice', 100)
 
     bobWins = 0
     aliceWins = 0
@@ -25,5 +25,5 @@ if __name__ == '__main__':
         elif forger == 'alice':
             aliceWins += 1
 
-    print("bob won "+str(bobWins) + " times")
-    print("alice won "+str(aliceWins) + " times")
+    print('Bob won: ' + str(bobWins) + ' times')
+    print('Alice won: ' + str(aliceWins) + ' times')

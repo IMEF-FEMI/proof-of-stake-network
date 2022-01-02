@@ -10,11 +10,11 @@ class AccountModel():
             self.balances[publicKeyString] = 0
 
     def getBalance(self, publicKeyString):
-        if not publicKeyString in self.balances:
+        if publicKeyString not in self.accounts:
             self.addAccount(publicKeyString)
         return self.balances[publicKeyString]
 
     def updateBalance(self, publicKeyString, amount):
         if publicKeyString not in self.accounts:
-                self.addAccount(publicKeyString)
+            self.addAccount(publicKeyString)
         self.balances[publicKeyString] += amount

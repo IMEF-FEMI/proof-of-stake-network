@@ -1,5 +1,5 @@
-from Lot import Lot
 from BlockchainUtils import BlockchainUtils
+from Lot import Lot
 
 
 class ProofOfStake():
@@ -9,7 +9,7 @@ class ProofOfStake():
         self.setGenesisNodeStake()
 
     def setGenesisNodeStake(self):
-        genesisPublicKey = open("keys/genesisPublicKey.pem", 'r').read()
+        genesisPublicKey = open('keys/genesisPublicKey.pem', 'r').read()
         self.stakers[genesisPublicKey] = 1
 
     def update(self, publicKeyString, stake):
@@ -38,7 +38,6 @@ class ProofOfStake():
         for lot in lots:
             lotIntValue = int(lot.lotHash(), 16)
             offset = abs(lotIntValue - referenceHashIntValue)
-            # we need the smallest possible offset
             if leastOffset is None or offset < leastOffset:
                 leastOffset = offset
                 winnerLot = lot
